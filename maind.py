@@ -71,38 +71,40 @@ def MyCrud():
 
 
 app = FastAPI()
-from pymongo import MongoClient
-from fastapi import FastAPI
-#COPY AND PASTING THE MONGODB URI.
-app = FastAPI()
-uri="mongodb+srv://Admin:dil123@cluster0.obuhhuf.mongodb.net/"
-client=MongoClient(uri)
 
-#defining the database name
-db=client["reactpy"]
-collection=db["task1"]
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 
-#checking the connection
+uri = "mongodb+srv://Admin:dil123@cluster0.obuhhuf.mongodb.net/"
+# Create a new client and connect to the server
+client = MongoClient(uri, server_api=ServerApi("1"))
+db = client["reactpy"]
+collection = db["task1"]
+# Send a ping to confirm a successful connection
 try:
     client.admin.command("ping")
-    print("successfully connected Mongodb")
+    print("Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
-    print(e) 
-
-    def login(
-            login_data:dict,
-    ): #remove async,sinc await makes code execution pause for the promise to resolve anyway.doesnt a 
-        username = login_data["name"]
-        password = login_data["password"]
-
-        #creat a document to insert into the collection
-        document = {"name":username,"password":password}
-        #logger.info('sample log message')
-        print(document)
+    print(e)
 
 
-        #insert the document into the collection
-        post_id= collection.insert_one(document).inserted_id #insert document
-        print(post_id)
 
-        return{"message":"Login successful"}
+def login(
+    login_data: dict,
+):  # removed async, since await makes code execution pause for the promise to resolve anyway. doesnt matter.
+    username = login_data["name"]
+    password = login_data["password"]
+
+    # Create a document to insert into the collection
+    document = {"name": username, "password": password}
+    # logger.info('sample log message')
+    print(document)
+
+    # Insert the document into the collection
+    post_id = collection.insert_one(document).inserted_id  # insert document
+    print(post_id)
+
+    return {"message": "Login successful"}
+
+
+configure(app, MyCrud)
