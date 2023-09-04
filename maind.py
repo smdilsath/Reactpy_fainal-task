@@ -72,13 +72,29 @@ def MyCrud():
 
 app = FastAPI()
 
+from fastapi import FastAPI
+from reactpy.backend.fastapi import configure
+from reactpy import component, html
+
+
+
+# Define a route for the root path ("/") that renders the MyCrud component.
+@app.get("/")
+async def read_root():
+    return MyCrud()
+
+# ... (database configuration and login function)
+
+# Configure the FastAPI app with the MyCrud component.
+configure(app, MyCrud)
+
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-uri = "mongodb+srv://Admin:dil123@cluster0.obuhhuf.mongodb.net/"
+uri = "mongodb+srv://dilsathaus:dil1234@cluster0.brwfbp6.mongodb.net/"
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi("1"))
-db = client["reactpy"]
+db = client["react_py"]
 collection = db["task1"]
 # Send a ping to confirm a successful connection
 try:
